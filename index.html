@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+	<head>
+		<meta charset="utf-8">
+		<meta name="author" content="Michal Šimonfy, http://virae.org">
+		<title>ČRo</title>
+		<link rel="shortcut icon" href="icon-default.png">
+		<link rel="stylesheet" href="assets/css/style.css">
+	</head>
+	<body ng-controller="streamer">
+		<h1>
+			<a data-href="http://www.rozhlas.cz/">
+				Český rozhlas
+			</a>
+			<a ng-click="toggleView()">
+				<small ng-show="view == 'stations'">živé vysílání</small>
+				<small ng-show="view == 'about'">&larr; zpět</small>
+			</a>
+		</h1>
+		<ul ng-show="view == 'stations'">
+			<li ng-class="{'is-playing': station.isPlaying, 'is-buffering': station.isBuffering}" class="station-{{station.id}}" ng-click="playback(station, $index)" ng-repeat="station in stations" style="color:{{station.color}}">
+				<span></span>
+				{{station.name}}
+			</li>
+		</ul>
+		<footer ng-show="view == 'about'">
+			<p>
+				Živé vysílání Českého rozhlasu pro prohlížeč Google Chrome.
+			</p>
+			<p>
+				<img src="assets/img/github.png" alt="" width="20" style="opacity: 0.5">
+				<a data-href="https://github.com/virae/cro-google-chrome" href="#" title="View source on Github">View source on Github</a><br>
+			</p>
+			<p>
+				<strong>Autor</strong><br>
+				<a data-href="http://virae.org/webdesign" href="#" title="Michal Šimonfy">Michal Šimonfy</a>
+				(<a data-href="http://twitter.com/virae" href="#" title="Michal Šimonfy">twitter</a>,
+				<a data-href="http://dribbble.com/virae" href="#" title="Michal Šimonfy">dribble</a>)
+			</p>
+		</footer>
+	</body>
+	<script src="assets/js/angular.min.js"></script>
+	<script src="assets/js/app.js"></script>
+</html>

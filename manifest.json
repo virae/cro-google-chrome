@@ -1,0 +1,19 @@
+{
+   "background": {
+      "page": "background.html"
+   },
+   "browser_action": {
+      "default_icon": "icon-default.png",
+      "default_title": "Český rozhlas - živé vysílání",
+      "default_popup": "index.html"
+   },
+   "description": "Živé vysílání Českého rozhlasu",
+   "icons": {
+      "128": "icon-state-playing.png"
+   },
+   "name": "Český rozhlas - živé vysílání",
+   "manifest_version": 2,
+   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.0"
+}
