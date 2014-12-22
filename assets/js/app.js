@@ -92,7 +92,7 @@
 		}
 
 		// Toggle playback
-		$scope.playback = function(station, index) {
+		$scope.play = function(station, index) {
 
 			if (station.isPlaying) {
 

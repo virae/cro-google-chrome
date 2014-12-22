@@ -19,7 +19,7 @@
 			</a>
 		</header>
 		<ul ng-show="view == 'stations'">
-			<li ng-class="{'is-playing': station.isPlaying, 'is-buffering': station.isBuffering}" class="station-{{station.id}}" ng-click="playback(station, $index)" ng-repeat="station in stations" style="color:{{station.color}}">
+			<li ng-class="{'is-playing': station.isPlaying, 'is-buffering': station.isBuffering}" class="station-{{station.id}}" ng-click="play(station, $index)" ng-repeat="station in stations" style="color:{{station.color}}">
 				<span></span>
 				{{station.name}}
 			</li>
