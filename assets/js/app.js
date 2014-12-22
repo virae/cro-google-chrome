@@ -94,7 +94,7 @@
 		// Toggle playback
 		$scope.play = function(station, index) {
 
-			if (station.isPlaying) {
+			if (station.isPlaying || station.isBuffering) {
 
 				chrome.runtime.sendMessage({ action: "stop" });
 				localStorage.removeItem('station');
