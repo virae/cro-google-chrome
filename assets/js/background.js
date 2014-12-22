@@ -1,6 +1,7 @@
 
 	var currentStation = null;
 	var audio;
+	var assets_path = 'assets/img/';
 
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
@@ -41,7 +42,7 @@
 				currentStation = request.index;
 
 				// Set playing icon
-				chrome.browserAction.setIcon({path: "icon-state-playing.png"});
+				chrome.browserAction.setIcon({path: assets_path + "icon-state-playing.png"});
 			}
 
 			if (action == 'stop') {
@@ -55,7 +56,7 @@
 				currentStation = null;
 
 				// Set default icon
-				chrome.browserAction.setIcon({path: "icon-default.png"})
+				chrome.browserAction.setIcon({path: assets_path + "icon-default.png"})
 			}
 		}
 	);

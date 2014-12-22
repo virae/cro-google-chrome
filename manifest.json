@@ -3,13 +3,13 @@
       "page": "background.html"
    },
    "browser_action": {
-      "default_icon": "icon-default.png",
+      "default_icon": "assets/img/icon-default.png",
       "default_title": "Český rozhlas - živé vysílání",
       "default_popup": "index.html"
    },
    "description": "Živé vysílání Českého rozhlasu",
    "icons": {
-      "128": "icon-state-playing.png"
+      "128": "assets/img/icon-state-playing.png"
    },
    "name": "Český rozhlas - živé vysílání",
    "manifest_version": 2,
