@@ -14,72 +14,63 @@
 				"name": "Radiožurnál",
 				"ogg" : "http://amp.cesnet.cz:8000/cro1.ogg",
 				"mp3" : "http://icecast7.play.cz/cro1-128.mp3",
-				"color": "#ED2E38",
-				"icon": ""
+				"color": "#ED2E38"
 			},
 			{
 				"id": "dvojka",
 				"name": "Dvojka",
 				"ogg" : "http://amp.cesnet.cz:8000/cro2.ogg",
 				"mp3" : "http://icecast7.play.cz/cro2-128.mp3",
-				"color": "#85248F",
-				"icon": ""
+				"color": "#85248F"
 			},
 			{
 				"id": "vltava",
 				"name": "Vltava",
 				"ogg" : "http://amp.cesnet.cz:8000/cro3.ogg",
 				"mp3" : "http://icecast5.play.cz/cro3-128.mp3",
-				"color": "#00B8E0",
-				"icon": ""
+				"color": "#00B8E0"
 			},
 			{
 				"id": "plus",
 				"name": "Plus",
 				"ogg" : "",
 				"mp3" : "http://icecast1.play.cz/croplus128.mp3",
-				"color": "#DE7008",
-				"icon": ""
+				"color": "#DE7008"
 			},
 			{
 				"id": "wave",
 				"name": "Radio Wave",
 				"ogg" : "http://amp.cesnet.cz:8000/cro-radio-wave.ogg",
 				"mp3" : "http://icecast5.play.cz/crowave-128.mp3",
-				"color": "#CDA200",
-				"icon": ""
+				"color": "#CDA200"
 			},
 			{
 				"id": "ddur",
 				"name": "D-dur",
 				"ogg" : "http://amp.cesnet.cz:8000/cro-d-dur.ogg",
 				"mp3" : "http://icecast5.play.cz/croddur-128.mp3",
-				"color": "#AB035C",
-				"icon": ""
+				"color": "#AB035C"
 			},
 			{
 				"id": "jazz",
 				"name": "Jazz",
 				"ogg" : "http://stream3.rozhlas.cz:8000/jazz_mid.ogg",
 				"mp3" : "http://icecast1.play.cz/crojazz128.mp3",
-				"color": "#00809E",
-				"icon": ""
+				"color": "#00809E"
 			},
 			{
 				"id": "junior",
 				"name": "Rádio Junior",
 				"ogg" : "http://amp.cesnet.cz:8000/cro-radio-junior.ogg",
 				"mp3" : "http://icecast5.play.cz/crojuniormaxi128.mp3",
-				"color": "#04123A",
-				"icon": ""
+				"color": "#04123A"
 			},
 			{
 				"id": "region",
 				"name": "Regionální stanice",
 				"ogg" : "",
 				"mp3" : "",
-				"color": "#00AB96",
-				"icon": ""
+				"color": "#00AB96"
 			}
 		];
 
