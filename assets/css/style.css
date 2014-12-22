@@ -1,5 +1,5 @@
 /* --------------------------------------------------------
-    Reset - normalize.css v1.0.0 | MIT License | git.io/normalize
+	Reset - normalize.css v1.0.0 | MIT License | git.io/normalize
    -------------------------------------------------------- */
 article,
 aside,
@@ -231,14 +231,13 @@ table {
   border-spacing: 0;
 }
 /* --------------------------------------------------------
-    Config
+	Config
    -------------------------------------------------------- */
 /* --------------------------------------------------------
-    Layout
+	Layout
    -------------------------------------------------------- */
 * {
   box-sizing: border-box;
-  -webkit-user-select: none;
 }
 body {
   font: 14px/18px 'Helvetica Neue', Arial, sans-serif;
@@ -249,12 +248,14 @@ body {
   padding: 0;
 }
 h1 {
+  position: relative;
   margin: 0;
-  padding: 14px 16px;
+  padding: 14px 38px 14px 16px;
   background: #f9f9f9;
   color: #04123A;
   font-size: 18px;
   border-bottom: 1px solid #eee;
+  -webkit-user-select: none;
 }
 h1 a {
   color: #04123A;
@@ -267,13 +268,32 @@ h1 small {
   font-size: 13px;
   font-weight: normal;
 }
+h1 .info-icon {
+  display: inline-block;
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: 15px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  transition: all .2s;
+}
+h1 .info-icon:hover {
+  background: #4183c4;
+}
 h2 {
   font-size: 15px;
   margin: 0;
 }
 a {
   cursor: pointer;
-  color: #4183C4;
+  color: #4183c4;
   outline: none;
   text-decoration: none;
 }
@@ -297,12 +317,12 @@ ul li {
   font-weight: 600;
   line-height: 32px;
   /* --------------------------------------------------------
-        States
-       -------------------------------------------------------- */
+		States
+	   -------------------------------------------------------- */
 
   /* --------------------------------------------------------
-        Stations
-       -------------------------------------------------------- */
+		Stations
+	   -------------------------------------------------------- */
 
 }
 ul li span {
