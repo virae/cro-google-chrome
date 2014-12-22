@@ -8,16 +8,16 @@
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
 	<body ng-controller="streamer">
-		<h1>
-			<a data-href="http://www.rozhlas.cz/">
-				Český rozhlas
-			</a>
+		<header>
+			<h1>
+				<a data-href="http://www.rozhlas.cz/">Český rozhlas</a>
+			</h1>
 			<a ng-click="toggleView()">
 				<small ng-show="view == 'stations'">živé vysílání</small>
 				<small ng-show="view == 'about'">&larr; zpět</small>
 				<span class="info-icon">?</span>
 			</a>
-		</h1>
+		</header>
 		<ul ng-show="view == 'stations'">
 			<li ng-class="{'is-playing': station.isPlaying, 'is-buffering': station.isBuffering}" class="station-{{station.id}}" ng-click="playback(station, $index)" ng-repeat="station in stations" style="color:{{station.color}}">
 				<span></span>
