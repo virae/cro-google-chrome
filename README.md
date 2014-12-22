@@ -1,2 +1,2 @@
-Živé vysílání Českého rozhlasu pro Google Chrome
+Živé vysílání Českého rozhlasu
 =================
