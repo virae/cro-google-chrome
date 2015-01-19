@@ -141,4 +141,10 @@
 
 		});
 
+		[].forEach.call(document.querySelectorAll('[i18n]'), function(element) {
+
+			element.innerHTML = chrome.i18n.getMessage(element.getAttribute('i18n'));
+
+		});
+
 	})();

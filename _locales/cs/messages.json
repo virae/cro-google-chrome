@@ -1,0 +1,14 @@
+{
+   "app_name": {
+      "message": "Český rozhlas - živé vysílání"
+   },
+   "app_description": {
+      "message": "Živé vysílání Českého rozhlasu pro prohlížeč Google Chrome."
+   },
+   "live_stream": {
+      "message": "živé vysílání"
+   },
+   "back": {
+      "message": "&larr; zpět"
+   }
+}

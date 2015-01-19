@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="author" content="Michal Šimonfy, http://virae.org">
-		<title>ČRo</title>
+		<title i18n="app_name"></title>
 		<link rel="shortcut icon" href="icon-default.png">
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
@@ -13,8 +13,8 @@
 				<a data-href="http://www.rozhlas.cz/">Český rozhlas</a>
 			</h1>
 			<a ng-click="toggleView()">
-				<small ng-show="view == 'stations'">živé vysílání</small>
-				<small ng-show="view == 'about'">&larr; zpět</small>
+				<small ng-show="view == 'stations'" i18n="live_stream"></small>
+				<small ng-show="view == 'about'" i18n="back"></small>
 				<span class="info-icon">?</span>
 			</a>
 		</header>
@@ -25,9 +25,7 @@
 			</li>
 		</ul>
 		<footer ng-show="view == 'about'">
-			<p>
-				Živé vysílání Českého rozhlasu pro prohlížeč Google Chrome.
-			</p>
+			<p i18n="app_description"></p>
 			<p>
 				<img src="assets/img/github.png" alt="" width="20" style="opacity: 0.5">
 				<a data-href="https://github.com/virae/cro-google-chrome" href="#" title="View source on Github">View source on Github</a><br>
