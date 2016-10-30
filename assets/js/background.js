@@ -1,6 +1,6 @@
 
-	var currentStation = null;
 	var audio;
+	var currentStation = null;
 	var assets_path = 'assets/img/';
 
 	chrome.runtime.onMessage.addListener(
@@ -8,6 +8,7 @@
 
 			var action = request.action;
 			var station = request.station;
+			var stream = request.stream;
 			var audio;
 
 			if (action == 'play' && station) {
@@ -19,12 +20,7 @@
 					audio.currentTime = 0;
 				}
 
-				if (station.ogg) {
-					audio.src = station.ogg;
-				}
-				else if (station.mp3) {
-					audio.src = station.mp3;
-				}
+				audio.src = stream;
 
 				// Play!
 				audio.play();

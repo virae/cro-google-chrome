@@ -2,9 +2,9 @@
 <html lang="en" ng-app="app">
 	<head>
 		<meta charset="utf-8">
-		<meta name="author" content="Michal Šimonfy, http://virae.org">
 		<title i18n="app_name"></title>
-		<link rel="shortcut icon" href="icon-default.png">
+		<meta name="author" content="Michal Šimonfy, http://virae.org">
+		<link rel="shortcut icon" href="assets/img/icon-default.png">
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
 	<body ng-controller="streamer">
@@ -13,17 +13,21 @@
 				<a data-href="http://www.rozhlas.cz/">Český rozhlas</a>
 			</h1>
 			<a ng-click="toggleView()">
-				<small ng-show="view == 'stations'" i18n="live_stream"></small>
-				<small ng-show="view == 'about'" i18n="back"></small>
-				<span class="info-icon">?</span>
+				<span ng-show="view == 'stations'" i18n="live_stream"></span>
+				<span ng-show="view == 'about'" i18n="back"></span>
+				<span class="questionmark">?</span>
 			</a>
 		</header>
-		<ul ng-show="view == 'stations'">
-			<li ng-class="{'is-playing': station.isPlaying, 'is-buffering': station.isBuffering}" class="station-{{station.id}}" ng-click="play(station, $index)" ng-repeat="station in stations" style="color:{{station.color}}">
+		<div ng-show="view == 'stations'">
+			<div class="station" ng-class="{'is-playing': station.isPlaying, 'is-buffering': station.isBuffering}" ng-click="play(station, $index)" ng-repeat="station in stations" style="color:{{station.color}}">
+				<div class="station-icon icon icon-logo"></div>
+				<div class="station-info">
+					<div class="station-name" ng-bind="station.shortname"></div>
+					<div class="station-show" ng-bind="station.nowplaying || '...'"></div>
+				</div>
 				<span></span>
-				{{station.name}}
-			</li>
-		</ul>
+			</div>
+		</div>
 		<footer ng-show="view == 'about'">
 			<p i18n="app_description"></p>
 			<p>
@@ -38,6 +42,7 @@
 			</p>
 		</footer>
 	</body>
+	<script src="assets/js/underscore.min.js"></script>
 	<script src="assets/js/angular.min.js"></script>
 	<script src="assets/js/app.js"></script>
 </html>

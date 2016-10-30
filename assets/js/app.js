@@ -1,85 +1,46 @@
 
 	var scope;
-	var station = localStorage.getItem('station') || null;
 
-	angular.module('app', []).controller('streamer', function ($scope) {
+	angular.module('app', []).controller('streamer', function ($scope, $http) {
+
+		var API_URL = "http://data.rozhlas.cz/api/v2/";
 
 		// Views
 		$scope.view = 'stations'; // [stations, about]
 
-		// Stations
-		$scope.stations = [
-			{
-				"id": "radiozurnal",
-				"name": "Radiožurnál",
-				"ogg" : "http://amp.cesnet.cz:8000/cro1.ogg",
-				"mp3" : "http://icecast7.play.cz/cro1-128.mp3",
-				"color": "#ED2E38"
-			},
-			{
-				"id": "dvojka",
-				"name": "Dvojka",
-				"ogg" : "http://amp.cesnet.cz:8000/cro2.ogg",
-				"mp3" : "http://icecast7.play.cz/cro2-128.mp3",
-				"color": "#85248F"
-			},
-			{
-				"id": "vltava",
-				"name": "Vltava",
-				"ogg" : "http://amp.cesnet.cz:8000/cro3.ogg",
-				"mp3" : "http://icecast5.play.cz/cro3-128.mp3",
-				"color": "#00B8E0"
-			},
-			{
-				"id": "plus",
-				"name": "Plus",
-				"ogg" : "",
-				"mp3" : "http://icecast1.play.cz/croplus128.mp3",
-				"color": "#DE7008"
-			},
-			{
-				"id": "wave",
-				"name": "Radio Wave",
-				"ogg" : "http://amp.cesnet.cz:8000/cro-radio-wave.ogg",
-				"mp3" : "http://icecast5.play.cz/crowave-128.mp3",
-				"color": "#CDA200"
-			},
-			{
-				"id": "ddur",
-				"name": "D-dur",
-				"ogg" : "http://amp.cesnet.cz:8000/cro-d-dur.ogg",
-				"mp3" : "http://icecast5.play.cz/croddur-128.mp3",
-				"color": "#AB035C"
-			},
-			{
-				"id": "jazz",
-				"name": "Jazz",
-				"ogg" : "http://stream3.rozhlas.cz:8000/jazz_mid.ogg",
-				"mp3" : "http://icecast1.play.cz/crojazz128.mp3",
-				"color": "#00809E"
-			},
-			{
-				"id": "junior",
-				"name": "Rádio Junior",
-				"ogg" : "http://amp.cesnet.cz:8000/cro-radio-junior.ogg",
-				"mp3" : "http://icecast5.play.cz/crojuniormaxi128.mp3",
-				"color": "#04123A"
-			},
-			{
-				"id": "region",
-				"name": "Regionální stanice",
-				"ogg" : "",
-				"mp3" : "",
-				"color": "#00AB96"
-			}
-		];
+		$scope.init = function() {
+
+			// Get stations
+			$http.get(API_URL + "meta/radioconfig.json", {cache: true}).success(function(response){
+				var data = response.data;
+
+				// Filter list of stations
+				$scope.stations = _.filter(data.station, function(station){
+					return station["@attributes"].type == "celoplošná";
+				});
+
+				// Get station schedule
+				for (i = 0; i < $scope.stations.length; i++) {
+					$scope.getCurrentShow($scope.stations[i]);
+				}
+
+				// Set current station as playing
+				if (currentStation = localStorage.getItem('station')) {
+					$scope.stations[currentStation].isPlaying = true;
+				}
+
+			}, function(error) {
+				// Error
+
+			});
+		}
 
 		// Reset
 		$scope.reset = function(station, index) {
-			angular.forEach($scope.stations, function(obj){
-				obj.isPlaying = false;
-				obj.isBuffering = false;
-			})
+			for (i = 0; i < $scope.stations.length; i++) {
+				$scope.stations[i].isPlaying = false;
+				$scope.stations[i].isBuffering = false;
+			}
 		}
 
 		// Toggle playback
@@ -93,20 +54,52 @@
 
 			} else {
 
-				chrome.runtime.sendMessage({ action: "play", station: station, index: index });
+				// Get audio stream
+				var streamInfo = _.find(station.audio.directstream.item, function(item) {
+					return item["@attributes"].type == "mp3" && item["@attributes"].bitrate == 128;
+				});
+				var stream = streamInfo["@attributes"].url;
+
+				chrome.runtime.sendMessage({ action: "play", station: station, index: index, stream: stream });
 				localStorage.setItem('station', index);
 				$scope.reset();
-
 			}
+		}
+
+		// Get station schedule from API
+		$scope.getCurrentShow = function(station) {
+
+			// Build API url
+			var parts = [
+				"schedule/day",
+				new Date().getFullYear(),
+				new Date().getMonth() + 1,
+				new Date().getDate(),
+				station["@attributes"].kod_webu
+			];
+
+			var url = API_URL + "/" + parts.join("/") + ".json";
+
+			// Retrieve data
+			$http.get(url, {cache: true}).success(function(response){
+				var data = response.data;
+				for (i = 0; i < data.length; i++) {
+					var now = new Date();
+					var since = new Date(data[i].since);
+					var till = new Date(data[i].till);
+					if (now >= since && now < till) {
+						station.nowplaying = data[i].title;
+						break;
+					}
+				}
+			})
 		}
 
 		$scope.toggleView = function() {
 			$scope.view = $scope.view == 'stations' ? 'about' : 'stations';
 		}
 
-		if (station) {
-			$scope.stations[station].isPlaying = true;
-		}
+		$scope.init();
 
 		scope = $scope;
 
