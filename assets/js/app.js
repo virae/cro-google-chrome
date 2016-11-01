@@ -1,7 +1,7 @@
 
 	var scope;
 
-	angular.module('app', []).controller('streamer', function ($scope, $http) {
+	angular.module('app', []).controller('streamer', function ($scope, $filter, $http) {
 
 		var API_URL = "http://data.rozhlas.cz/api/v2/";
 
@@ -72,13 +72,11 @@
 			// Build API url
 			var parts = [
 				"schedule/day",
-				new Date().getFullYear(),
-				new Date().getMonth() + 1,
-				new Date().getDate(),
+				$filter('date')(new Date(), "yyyy/MM/dd"),
 				station["@attributes"].kod_webu
 			];
 
-			var url = API_URL + "/" + parts.join("/") + ".json";
+			var url = API_URL + parts.join("/") + ".json";
 
 			// Retrieve data
 			$http.get(url, {cache: true}).success(function(response){
