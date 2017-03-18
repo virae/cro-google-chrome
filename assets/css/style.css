@@ -256,6 +256,7 @@ body {
   width: 280px;
   margin: 0 auto;
   padding: 0;
+  min-height: 489px;
 }
 h1,
 h2 {

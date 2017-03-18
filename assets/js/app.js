@@ -95,6 +95,7 @@
 
 		$scope.toggleView = function() {
 			$scope.view = $scope.view == 'stations' ? 'about' : 'stations';
+			document.getElementsByTagName('body')[0].style.minHeight = ($scope.view == 'stations' ? '489px' : '0');
 		}
 
 		$scope.init();
