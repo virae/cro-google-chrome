@@ -1,142 +1,161 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const API_URL = "http://data.rozhlas.cz/api/v2/";
+  let view = 'stations';
+  let stations = [];
 
-	var scope;
+  function init() {
+    fetch(API_URL + "meta/radioconfig.json", {
+        cache: 'force-cache'
+      })
+      .then(response => response.json())
+      .then(data => {
+        stations = data.data.station
+        // XXX: Do not filter stations
+        // .filter(station => station["@attributes"].type == "celoplošná");
+        stations.forEach(station => getCurrentShow(station));
 
-	angular.module('app', []).controller('streamer', function ($scope, $filter, $http) {
+        const currentStation = localStorage.getItem('station');
+        if (currentStation !== null) {
+          stations[currentStation].isPlaying = true;
+        }
+        renderStations();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
 
-		var API_URL = "http://data.rozhlas.cz/api/v2/";
+  function reset() {
+    stations.forEach(station => {
+      station.isPlaying = false;
+      station.isBuffering = false;
+    });
+  }
 
-		// Views
-		$scope.view = 'stations'; // [stations, about]
+  function play(station, index) {
+    if (station.isPlaying || station.isBuffering) {
+      chrome.runtime.sendMessage({
+        action: "stop"
+      });
+      localStorage.removeItem('station');
+      reset();
+    } else {
+      const streamInfo = station.audio.directstream.item.find(item => item["@attributes"].type == "mp3" && item["@attributes"].bitrate == 128);
+      const stream = streamInfo["@attributes"].url;
+      chrome.runtime.sendMessage({
+        action: "play",
+        station: station,
+        index: index,
+        stream: stream
+      });
+      localStorage.setItem('station', index);
+      reset();
+    }
+    renderStations();
+  }
 
-		$scope.init = function() {
+  function getCurrentShow(station) {
+    const parts = [
+      "schedule/day",
+      new Date().toISOString().slice(0, 10).replace(/-/g, '/'),
+      station["@attributes"].kod_webu
+    ];
+    const url = API_URL + parts.join("/") + ".json";
 
-			// Get stations
-			$http.get(API_URL + "meta/radioconfig.json", {cache: true}).success(function(response){
-				var data = response.data;
+    fetch(url, {
+        cache: 'force-cache'
+      })
+      .then(response => response.json())
+      .then(data => {
+        const now = new Date();
+        for (let i = 0; i < data?.data?.length || 0; i++) {
+          const since = new Date(data.data[i].since);
+          const till = new Date(data.data[i].till);
+          if (now >= since && now < till) {
+            station.nowplaying = data.data[i].title;
+            break;
+          }
+        }
+        renderStations();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
 
-				// Filter list of stations
-				$scope.stations = _.filter(data.station, function(station){
-					return station["@attributes"].type == "celoplošná";
-				});
+  function toggleView() {
+    view = view === 'stations' ? 'about' : 'stations';
+    document.body.style.minHeight = view === 'stations' ? '489px' : '0';
+    renderView();
+  }
 
-				// Get station schedule
-				for (i = 0; i < $scope.stations.length; i++) {
-					$scope.getCurrentShow($scope.stations[i]);
-				}
+  function renderStations() {
+    const stationsContainer = document.getElementById('stations');
+    stationsContainer.innerHTML = '';
 
-				// Set current station as playing
-				if (currentStation = localStorage.getItem('station')) {
-					$scope.stations[currentStation].isPlaying = true;
-				}
+    stations.forEach((station, index) => {
+      const stationElement = document.createElement('div');
+      stationElement.className = 'station';
+      if (station.isPlaying) stationElement.classList.add('is-playing');
+      if (station.isBuffering) stationElement.classList.add('is-buffering');
+      stationElement.style.color = station.color;
+      stationElement.addEventListener('click', () => play(station, index));
 
-			}, function(error) {
-				// Error
+      const iconElement = document.createElement('div');
+      iconElement.className = 'station-icon icon icon-logo';
+      stationElement.appendChild(iconElement);
 
-			});
-		}
+      const infoElement = document.createElement('div');
+      infoElement.className = 'station-info';
+      stationElement.appendChild(infoElement);
 
-		// Reset
-		$scope.reset = function(station, index) {
-			for (i = 0; i < $scope.stations.length; i++) {
-				$scope.stations[i].isPlaying = false;
-				$scope.stations[i].isBuffering = false;
-			}
-		}
+      const nameElement = document.createElement('div');
+      nameElement.className = 'station-name';
+      nameElement.textContent = station.shortname;
+      infoElement.appendChild(nameElement);
 
-		// Toggle playback
-		$scope.play = function(station, index) {
+      const showElement = document.createElement('div');
+      showElement.className = 'station-show';
+      showElement.textContent = station.nowplaying || '...';
+      infoElement.appendChild(showElement);
 
-			if (station.isPlaying || station.isBuffering) {
+      stationElement.appendChild(document.createElement('span'));
 
-				chrome.runtime.sendMessage({ action: "stop" });
-				localStorage.removeItem('station');
-				$scope.reset();
+      stationsContainer.appendChild(stationElement);
+    });
+  }
 
-			} else {
+  function renderView() {
+    document.getElementById('stations').style.display = view === 'stations' ? 'block' : 'none';
+    document.getElementById('about').style.display = view === 'about' ? 'block' : 'none';
+  }
 
-				// Get audio stream
-				var streamInfo = _.find(station.audio.directstream.item, function(item) {
-					return item["@attributes"].type == "mp3" && item["@attributes"].bitrate == 128;
-				});
-				var stream = streamInfo["@attributes"].url;
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    reset();
+    switch (request.status) {
+      case 'buffering':
+        stations[localStorage.getItem('station')].isBuffering = true;
+        stations[localStorage.getItem('station')].isPlaying = false;
+        break;
+      case 'playing':
+        stations[localStorage.getItem('station')].isBuffering = false;
+        stations[localStorage.getItem('station')].isPlaying = true;
+        break;
+    }
+    renderStations();
+  });
 
-				chrome.runtime.sendMessage({ action: "play", station: station, index: index, stream: stream });
-				localStorage.setItem('station', index);
-				$scope.reset();
-			}
-		}
+  document.querySelectorAll('[data-href]').forEach(link => {
+    link.addEventListener('click', () => {
+      window.open(link.getAttribute('data-href'));
+    });
+  });
 
-		// Get station schedule from API
-		$scope.getCurrentShow = function(station) {
+  document.querySelectorAll('[i18n]').forEach(element => {
+    element.textContent = chrome.i18n.getMessage(element.getAttribute('i18n'));
+  });
 
-			// Build API url
-			var parts = [
-				"schedule/day",
-				$filter('date')(new Date(), "yyyy/MM/dd"),
-				station["@attributes"].kod_webu
-			];
+  document.querySelector('#toggle-view').addEventListener('click', toggleView);
 
-			var url = API_URL + parts.join("/") + ".json";
-
-			// Retrieve data
-			$http.get(url, {cache: true}).success(function(response){
-				var data = response.data;
-				for (i = 0; i < data.length; i++) {
-					var now = new Date();
-					var since = new Date(data[i].since);
-					var till = new Date(data[i].till);
-					if (now >= since && now < till) {
-						station.nowplaying = data[i].title;
-						break;
-					}
-				}
-			})
-		}
-
-		$scope.toggleView = function() {
-			$scope.view = $scope.view == 'stations' ? 'about' : 'stations';
-			document.getElementsByTagName('body')[0].style.minHeight = ($scope.view == 'stations' ? '489px' : '0');
-		}
-
-		$scope.init();
-
-		scope = $scope;
-
-	});
-
-	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-
-			scope.reset();
-
-			switch (request.status) {
-				case 'buffering':
-					scope.stations[localStorage.getItem('station')].isBuffering = true;
-					scope.stations[localStorage.getItem('station')].isPlaying = false;
-				break;
-				case 'playing':
-					scope.stations[localStorage.getItem('station')].isBuffering = false;
-					scope.stations[localStorage.getItem('station')].isPlaying = true;
-				break;
-			}
-			scope.$apply();
-		}
-	);
-
-	(function() {
-
-		[].forEach.call(document.querySelectorAll('[data-href]'), function(link) {
-
-			link.addEventListener('click',function(){
-				window.open(link.getAttribute('data-href'));
-			});
-
-		});
-
-		[].forEach.call(document.querySelectorAll('[i18n]'), function(element) {
-
-			element.innerHTML = chrome.i18n.getMessage(element.getAttribute('i18n'));
-
-		});
-
-	})();
+  init();
+});

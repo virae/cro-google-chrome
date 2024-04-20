@@ -1,48 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app">
-	<head>
-		<meta charset="utf-8">
-		<title i18n="app_name"></title>
-		<meta name="author" content="Michal Šimonfy, http://virae.org">
-		<link rel="shortcut icon" href="assets/img/icon-default.png">
-		<link rel="stylesheet" href="assets/css/style.css">
-	</head>
-	<body ng-controller="streamer">
-		<header>
-			<h1>
-				<a data-href="http://www.rozhlas.cz/">Český rozhlas</a>
-			</h1>
-			<a ng-click="toggleView()">
-				<span ng-show="view == 'stations'" i18n="live_stream"></span>
-				<span ng-show="view == 'about'" i18n="back"></span>
-				<span class="questionmark">?</span>
-			</a>
-		</header>
-		<div ng-show="view == 'stations'">
-			<div class="station" ng-class="{'is-playing': station.isPlaying, 'is-buffering': station.isBuffering}" ng-click="play(station, $index)" ng-repeat="station in stations" style="color:{{station.color}}">
-				<div class="station-icon icon icon-logo"></div>
-				<div class="station-info">
-					<div class="station-name" ng-bind="station.shortname"></div>
-					<div class="station-show" ng-bind="station.nowplaying || '...'"></div>
-				</div>
-				<span></span>
-			</div>
-		</div>
-		<footer ng-show="view == 'about'">
-			<p i18n="app_description"></p>
-			<p>
-				<img src="assets/img/github.png" alt="" width="20" style="opacity: 0.5">
-				<a data-href="https://github.com/virae/cro-google-chrome" href="#" title="View source on Github">View source on Github</a><br>
-			</p>
-			<p>
-				<strong>Autor</strong><br>
-				<a data-href="http://virae.org/webdesign" href="#" title="Michal Šimonfy">Michal Šimonfy</a>
-				(<a data-href="http://twitter.com/virae" href="#" title="Michal Šimonfy">twitter</a>,
-				<a data-href="http://dribbble.com/virae" href="#" title="Michal Šimonfy">dribble</a>)
-			</p>
-		</footer>
-	</body>
-	<script src="assets/js/underscore.min.js"></script>
-	<script src="assets/js/angular.min.js"></script>
-	<script src="assets/js/app.js"></script>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title i18n="app_name"></title>
+  <meta name="author" content="Michal Šimonfy, http://virae.org">
+  <link rel="shortcut icon" href="assets/img/icon-default.png">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>
+      <a data-href="http://www.rozhlas.cz/">Český rozhlas</a>
+    </h1>
+    <a id="toggle-view">
+      <span i18n="about"></span>
+      <span class="questionmark">?</span>
+    </a>
+  </header>
+  <div id="stations"></div>
+  <div id="about">
+    <p i18n="app_description"></p>
+    <p>
+      <a data-href="https://buymeacoffee.com/speeddial2">
+        <img src="assets/img/buy-me-a-coffee.svg" width="156">
+      </a>
+    </p>
+    <p>
+      <img src="assets/img/github.png" alt="" width="20" style="vertical-align: middle; margin-right: 2px;">
+      <a data-href="https://github.com/virae/cro-google-chrome" href="#" title="View source on Github">View source on Github</a><br>
+    </p>
+    <footer>
+      <strong>Autor</strong>:
+      <a data-href="http://virae.org/webdesign">Michal Šimonfy</a> / <a data-href="http://twitter.com/virae">twitter</a>
+    </footer>
+  </div>
+  <script src="assets/js/app.js"></script>
+</body>
 </html>

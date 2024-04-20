@@ -1,58 +1,73 @@
+const assets_path = '/assets/img/';
+let currentStation = null;
+let playerWindowId = null;
 
-	var audio;
-	var currentStation = null;
-	var assets_path = 'assets/img/';
+const createAudioWindow = async (streamURL) => {
+  const url = chrome.runtime.getURL(`audio.html?stream=${streamURL}`);
+  try {
+    const { id } = await chrome.windows.create({
+      type: 'popup',
+      focused: false,
+      top: 1,
+      left: 1,
+      height: 1,
+      width: 1,
+      url,
+    });
+    await chrome.windows.update(id, { focused: false });
+    return id;
+  } catch (e) {
+    console.error('Error creating audio window:', e);
+  }
+};
 
-	chrome.runtime.onMessage.addListener(
-		function(request, sender, sendResponse) {
+const removeAudioWindow = async () => {
+  try {
+    if (playerWindowId) {
+      await chrome.windows.remove(playerWindowId);
+    }
+  } catch (e) {
+    console.error('Error removing audio window:', e);
+  }
+};
 
-			var action = request.action;
-			var station = request.station;
-			var stream = request.stream;
-			var audio;
+const handlePlayRequest = async (station, stream, index) => {
+  await removeAudioWindow();
+  playerWindowId = await createAudioWindow(stream);
+  chrome.runtime.sendMessage({ status: 'playing' });
+  currentStation = index;
+  chrome.action.setIcon({ path: `${assets_path}icon-state-playing.png` });
+};
 
-			if (action == 'play' && station) {
+const handleStopRequest = () => {
+  removeAudioWindow();
+  playerWindowId = null;
+  currentStation = null;
+  chrome.action.setIcon({ path: `${assets_path}icon-default.png` });
+};
 
-				audio = document.getElementsByTagName("audio")[0];
+chrome.runtime.onMessage.addListener((request) => {
+  const { action, station, stream, index } = request;
+  if (action === 'play' && station) {
+    handlePlayRequest(station, stream, index);
+  } else if (action === 'stop') {
+    handleStopRequest();
+  }
+});
 
-				if (!audio.paused) {
-					audio.pause();
-					audio.currentTime = 0;
-				}
-
-				audio.src = stream;
-
-				// Play!
-				audio.play();
-
-				chrome.extension.sendMessage({status: "buffering"});
-
-				audio.onplaying = function() {
-					chrome.extension.sendMessage({status: "playing"});
-				}
-				audio.waiting = function() {
-					chrome.extension.sendMessage({status: "buffering"});
-				}
-
-				// Set currently playing station
-				currentStation = request.index;
-
-				// Set playing icon
-				chrome.browserAction.setIcon({path: assets_path + "icon-state-playing.png"});
-			}
-
-			if (action == 'stop') {
-
-				audio = document.getElementsByTagName("audio")[0];
-
-				audio.pause();
-				audio.currentTime = 0;
-				audio.src = '';
-
-				currentStation = null;
-
-				// Set default icon
-				chrome.browserAction.setIcon({path: assets_path + "icon-default.png"})
-			}
-		}
-	);
+// Remove audio window when all other windows are closed
+chrome.windows.onRemoved.addListener(() => {
+  chrome.windows.getAll((windows) => {
+    if (
+      windows.length === 1 &&
+      windows[0].type === 'popup' &&
+      windows[0].id === playerWindowId
+    ) {
+      try {
+        chrome.windows.remove(playerWindowId);
+      } catch (e) {
+        console.error('Error removing audio window:', e);
+      }
+    }
+  });
+});
