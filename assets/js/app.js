@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(response => response.json())
       .then(data => {
-        stations = data.data.station.filter(station => station["@attributes"].type == "celoplošná");
+        stations = data.data.station
+        // XXX: Do not filter stations
+        // .filter(station => station["@attributes"].type == "celoplošná");
         stations.forEach(station => getCurrentShow(station));
 
         const currentStation = localStorage.getItem('station');
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(data => {
         const now = new Date();
-        for (let i = 0; i < data.data.length; i++) {
+        for (let i = 0; i < data?.data?.length || 0; i++) {
           const since = new Date(data.data[i].since);
           const till = new Date(data.data[i].till);
           if (now >= since && now < till) {
@@ -126,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderView() {
     document.getElementById('stations').style.display = view === 'stations' ? 'block' : 'none';
     document.querySelector('footer').style.display = view === 'about' ? 'block' : 'none';
-    document.querySelector('header a').textContent = view === 'stations' ? chrome.i18n.getMessage('live_stream') : chrome.i18n.getMessage('back');
   }
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -154,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     element.textContent = chrome.i18n.getMessage(element.getAttribute('i18n'));
   });
 
-  document.querySelector('header a').addEventListener('click', toggleView);
+  document.querySelector('#toggle-view').addEventListener('click', toggleView);
 
   init();
 });

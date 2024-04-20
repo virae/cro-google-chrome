@@ -5,8 +5,8 @@
    "app_description": {
       "message": "Živé vysielanie Českého rozhlasu pre prehliadač Google Chrome."
    },
-   "live_stream": {
-      "message": "živé vysielanie"
+   "about": {
+      "message": "o rozšírení"
    },
    "back": {
       "message": "&larr; späť"
