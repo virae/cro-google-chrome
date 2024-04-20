@@ -67,11 +67,11 @@ h4 {
   margin: 1.33em 0;
 }
 h5 {
-  font-size: .83em;
+  font-size: 0.83em;
   margin: 1.67em 0;
 }
 h6 {
-  font-size: .75em;
+  font-size: 0.75em;
   margin: 2.33em 0;
 }
 abbr[title] {
@@ -99,8 +99,8 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace,serif;
-  _font-family: 'courier new', monospace;
+  font-family: monospace, serif;
+  _font-family: "courier new", monospace;
   font-size: 1em;
 }
 pre {
@@ -113,7 +113,7 @@ q {
 }
 q:before,
 q:after {
-  content: '';
+  content: "";
   content: none;
 }
 small {
@@ -239,7 +239,10 @@ table {
 @font-face {
   font-family: "cesky-rozhlas";
   src: url("../font/cesky-rozhlas.eot");
-  src: url("../font/cesky-rozhlas.eot?#iefix") format("embedded-opentype"), url("../font/cesky-rozhlas.woff") format("woff"), url("../font/cesky-rozhlas.ttf") format("truetype"), url("../font/cesky-rozhlas.svg#cesky-rozhlas") format("svg");
+  src: url("../font/cesky-rozhlas.eot?#iefix") format("embedded-opentype"),
+    url("../font/cesky-rozhlas.woff") format("woff"),
+    url("../font/cesky-rozhlas.ttf") format("truetype"),
+    url("../font/cesky-rozhlas.svg#cesky-rozhlas") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -250,7 +253,7 @@ table {
   box-sizing: border-box;
 }
 body {
-  font: 14px/18px 'Helvetica Neue', Arial, sans-serif;
+  font: 14px/18px "Helvetica Neue", Arial, sans-serif;
   color: #444444;
   overflow: hidden;
   width: 280px;
@@ -305,13 +308,27 @@ header > a:hover {
 }
 /* --------------------------------------------------------
 	Footer
-   -------------------------------------------------------- */
+ -------------------------------------------------------- */
 footer {
-  line-height: 1.5em;
+  padding: 20px;
+  border-top: 1px solid #eee;
+  background: #fafafa;
+  font-size: 13px;
 }
-footer img {
-  vertical-align: middle;
-  margin: 0 4px 0 0;
+footer small {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+}
+footer p {
+  margin-bottom: 6px;
+}
+footer p:first-child {
+  margin-top: 0;
+}
+footer ul {
+  margin: 0;
+  padding: 0 0 0 20px;
 }
 /* --------------------------------------------------------
 	Station
@@ -348,12 +365,12 @@ footer img {
   text-overflow: ellipsis;
 }
 .station.is-playing:after {
-  opacity: .3;
+  opacity: 0.3;
   display: block;
   background: url(../img/playing.gif) no-repeat center top 100%;
 }
 .station.is-buffering:after {
-  opacity: .8;
+  opacity: 0.8;
   display: block;
   background: url(../img/loading.gif) no-repeat center 100%;
 }
@@ -402,7 +419,7 @@ footer img {
   font-size: 10px;
   text-align: center;
   background: #b6b6b9;
-  transition: all .2s;
+  transition: all 0.2s;
 }
 .questionmark:hover {
   background: #4183c4;

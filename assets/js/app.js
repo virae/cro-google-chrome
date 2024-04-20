@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderView() {
     document.getElementById('stations').style.display = view === 'stations' ? 'block' : 'none';
-    document.querySelector('footer').style.display = view === 'about' ? 'block' : 'none';
+    document.getElementById('about').style.display = view === 'about' ? 'block' : 'none';
   }
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
